@@ -8,19 +8,21 @@ import (
 	"strings"
 )
 
-const (
-	GridWidth  = 2
-	GridHeight = 2
+type GridContext struct {
+	Width  int
+	Height int
+}
 
+const (
 	Left  = "left"
 	Right = "right"
 	Up    = "up"
 	Down  = "down"
 )
 
-func gridCoordinatesFromDesktopNumber(desktopNumber int) (x int, y int) {
-	x = (desktopNumber - 1) % GridWidth
-	y = (desktopNumber - 1) / GridHeight
+func gridCoordinatesFromDesktopNumber(desktopNumber int, gridContext *GridContext) (x int, y int) {
+	x = (desktopNumber - 1) % gridContext.Width
+	y = (desktopNumber - 1) / gridContext.Height
 
 	return (x + 1), (y + 1)
 }
@@ -48,10 +50,10 @@ func setDesktopNumber(n int) error {
 	return err
 }
 
-func canSwitch(direction string, desktopNumber int) bool {
-	x, y := gridCoordinatesFromDesktopNumber(desktopNumber)
+func canSwitch(direction string, desktopNumber int, gridContext *GridContext) bool {
+	x, y := gridCoordinatesFromDesktopNumber(desktopNumber, gridContext)
 
-	if direction == Right && x == GridWidth {
+	if direction == Right && x == gridContext.Width {
 		return false
 	}
 
@@ -59,7 +61,7 @@ func canSwitch(direction string, desktopNumber int) bool {
 		return false
 	}
 
-	if direction == Down && y == GridHeight {
+	if direction == Down && y == gridContext.Height {
 		return false
 	}
 
@@ -85,7 +87,7 @@ func getDesktopModifier(direction string) (int, error) {
 	}
 }
 
-func switchDesktop(direction string) error {
+func SwitchDesktop(direction string, gridContext *GridContext) error {
 	desktopNumber, err := getDesktopNumber()
 	if err != nil {
 		return err
@@ -96,7 +98,7 @@ func switchDesktop(direction string) error {
 		return err
 	}
 
-	if canSwitch(direction, desktopNumber) {
+	if canSwitch(direction, desktopNumber, gridContext) {
 		newDesktopNumber := desktopNumber + modifier
 		err := setDesktopNumber(newDesktopNumber)
 
@@ -104,7 +106,7 @@ func switchDesktop(direction string) error {
 			return err
 		}
 	} else {
-		x, y := gridCoordinatesFromDesktopNumber(desktopNumber)
+		x, y := gridCoordinatesFromDesktopNumber(desktopNumber, gridContext)
 		return fmt.Errorf(
 			"Can't switch %s from desktop number %d (%d, %d)",
 			direction, desktopNumber, x, y,
@@ -116,7 +118,9 @@ func switchDesktop(direction string) error {
 
 func main() {
 	direction := os.Args[1]
-	err := switchDesktop(direction)
+
+	context := &GridContext{Width: 2, Height: 2}
+	err := SwitchDesktop(direction, context)
 
 	if err != nil {
 		fmt.Println(err)
