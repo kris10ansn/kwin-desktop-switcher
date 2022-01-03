@@ -13,11 +13,13 @@ type GridContext struct {
 	Height int
 }
 
+type Direction = string
+
 const (
-	Left  = "left"
-	Right = "right"
-	Up    = "up"
-	Down  = "down"
+	Left  Direction = "left"
+	Right Direction = "right"
+	Up    Direction = "up"
+	Down  Direction = "down"
 )
 
 func gridCoordinatesFromDesktopNumber(desktopNumber int, gridContext *GridContext) (x int, y int) {
@@ -50,7 +52,7 @@ func setDesktopNumber(n int) error {
 	return err
 }
 
-func canSwitch(direction string, desktopNumber int, gridContext *GridContext) bool {
+func canSwitch(direction Direction, desktopNumber int, gridContext *GridContext) bool {
 	x, y := gridCoordinatesFromDesktopNumber(desktopNumber, gridContext)
 
 	if direction == Right && x == gridContext.Width {
@@ -72,7 +74,7 @@ func canSwitch(direction string, desktopNumber int, gridContext *GridContext) bo
 	return true
 }
 
-func getDesktopModifier(direction string) (int, error) {
+func getDesktopModifier(direction Direction) (int, error) {
 	switch direction {
 	case Right:
 		return 1, nil
@@ -87,7 +89,7 @@ func getDesktopModifier(direction string) (int, error) {
 	}
 }
 
-func SwitchDesktop(direction string, gridContext *GridContext) error {
+func SwitchDesktop(direction Direction, gridContext *GridContext) error {
 	desktopNumber, err := getDesktopNumber()
 	if err != nil {
 		return err
