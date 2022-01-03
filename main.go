@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/kris10ansn/kwin-desktop-switcher/switcher"
+	"github.com/kris10ansn/kwin-desktop-switcher/pkg/switcher"
 )
 
 func main() {
