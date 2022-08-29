@@ -58,7 +58,7 @@ func canSwitch(direction Direction, desktopNumber int, gridContext *GridContext)
 		return false
 	}
 
-	if direction == Left && x == 0 {
+	if direction == Left && x == 1 {
 		return false
 	}
 
@@ -66,7 +66,7 @@ func canSwitch(direction Direction, desktopNumber int, gridContext *GridContext)
 		return false
 	}
 
-	if direction == Up && y == 0 {
+	if direction == Up && y == 1 {
 		return false
 	}
 
@@ -106,12 +106,6 @@ func SwitchDesktop(direction Direction, gridContext *GridContext) error {
 		if err != nil {
 			return err
 		}
-	} else {
-		x, y := gridCoordinatesFromDesktopNumber(desktopNumber, gridContext)
-		return fmt.Errorf(
-			"Can't switch %s from desktop number %d (%d, %d)",
-			direction, desktopNumber, x, y,
-		)
 	}
 
 	return nil
